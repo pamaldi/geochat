@@ -22,6 +22,7 @@ public class MongoIngestor
                 long numberOfDocuments = mongoClient.getDatabase(databaseName).getCollection(collectionName).countDocuments();
                 if(numberOfDocuments > 0)
                 {
+                    LOGGER.info("Collection already existing: "+collectionName);
                     return;
                 }
                 documents.forEach(document -> {
@@ -31,9 +32,6 @@ public class MongoIngestor
                 LOGGER.info("End Ingesting data");
                 MongoCollection<Document> collection = mongoClient.getDatabase(databaseName).getCollection(collectionName);
                 LOGGER.info("Ingested data "+collection.countDocuments());
-                for (Document doc : collection.find()) {
-                    System.out.println(doc.toJson());
-                }
                 LOGGER.info("End Ingesting data");
     }
 
