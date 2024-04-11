@@ -1,4 +1,5 @@
 
+
 var map = L.map('myMap').setView([44.4949, 11.3426], 12);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -7,54 +8,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var heatPoints;
 var heatmap;
-/*
-function onEachFeature(feature, layer) {
-    let popupContent = `<p></p>`;
+var mapResponseDetail;
 
-    if (feature.properties && feature.properties.affluenza_media) {
-        popupContent += feature.properties.affluenza_media;
-    }
-
-    layer.bindPopup(popupContent);
-}
-
-// Use the fetch API to load the JSON data from the endpoint
-async function fetchDataAndAddToMap() {
-    try {
-        const response = await fetch('http://localhost:8080/map');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json(); // Wait for the response to be parsed as JSON
-
-        // Clear existing data on the map
-        map.eachLayer(function(layer) {
-            if (!!layer.toGeoJSON) { // Check if layer is a GeoJSON layer
-                map.removeLayer(layer);
-            }
-        });
-
-        // Add new data to the map
-        L.geoJSON(data,{
-            onEachFeature
-        }).addTo(map);
-    } catch (error) {
-        console.error('There has been a problem with your fetch operation:', error);
-    }
-}
-
-// Initial fetch of the data
-fetchDataAndAddToMap();
-*/
-
-
-
-fetch('http://localhost:8080/map')
+fetch('http://localhost:8080/map?startDate=2024-01-01&endDate=2024-04-11')
     .then(function(response) {
         return response.json();
     })
     .then(function(geojsonData) {
-        geojsonData.features.forEach(feature => {
+        geojsonData.featureCollection.features.forEach(feature => {
             if (feature.geometry.type === 'Polygon') {
                 ensureRightHandRule(feature.geometry);
             } else if (feature.geometry.type === 'MultiPolygon') {
@@ -65,7 +26,7 @@ fetch('http://localhost:8080/map')
             }
         });
         // Assuming geojsonData is the GeoJSON object fetched from the server
-        heatPoints = geojsonData.features.map(function(feature) {
+        heatPoints = geojsonData.featureCollection.features.map(function(feature) {
             if (feature.geometry.type === "Polygon") {
                 var allCoords = feature.geometry.coordinates[0]; // Assuming the first array is the outer boundary
                 var latSum = 0, lonSum = 0;
@@ -102,6 +63,7 @@ fetch('http://localhost:8080/map')
                 .setContent('Intensity: ' + e.intensity)
                 .openOn(map);
         });
+        info.update(geojsonData.mapResponseDetail);
     })
     .catch(function(error) {
         console.error('Error fetching GeoJSON:', error);
@@ -136,6 +98,33 @@ function isClockwise(ring) {
     }
     return area > 0;
 }
+
+// Adding a custom control for displaying static information
+var info = L.control({position: 'topright'});
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this._div.innerHTML = 'Loading data...';
+    return this._div;
+};
+
+// Method to update the control based on the data passed
+info.update = function (data) {
+    var propertiesHtml = data.mapResponseProperties.map(function(prop) {
+        return `<strong>${prop.nomeZona}</strong><br>Affluenza: ${prop.affluenza}<br>Codice Zona: ${prop.codiceZona}<br><br>`;
+    }).join('');
+
+    this._div.innerHTML = `<h4>Map Information</h4>
+                           Start Date: ${data.startDate}<br>
+                           End Date: ${data.endDate}<br>
+                           ${propertiesHtml}`;
+};
+
+info.addTo(map);
+
+// Style the info control in your CSS if needed, e.g.,
+ //.info { background: rgba(255, 255, 255, 0.8); margin: 10px; padding: 10px; border-radius: 4px; }
+
 
 
 

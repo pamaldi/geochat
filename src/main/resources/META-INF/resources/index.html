@@ -10,9 +10,21 @@
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
 </head>
+<style>
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        max-height: 200px; /* Adjust based on your needs */
+        overflow-y: auto; /* This makes it scrollable if content exceeds 200px */
+    }
+</style>
 <body>
 <div class="container">
-    <h2 class="text-center mt-5">Chatbot</h2>
+    <h2 class="text-center mt-5">Strabone</h2>
     <div id="chatbox" class="border rounded p-3 mb-3" style="height: 300px; overflow-y: scroll;"></div>
     <input type="text" id="userInput" class="form-control mb-2" placeholder="Type a message...">
     <button id="sendBtn" class="btn btn-primary">Send</button>
