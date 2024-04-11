@@ -1,4 +1,5 @@
 package cloud.isaura.adso.geochat.conversation.ws;
+import cloud.isaura.adso.geochat.conversation.ConversationAgent;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
@@ -15,9 +16,12 @@ import java.io.IOException;
 public class WebSocketEndpoint
 {
 
-    private static final Logger LOGGER = Logger.getLogger("ws");
+    private static final Logger LOGGER = Logger.getLogger("WebSocket");
     @Inject
     ManagedExecutor managedExecutor;
+
+    @Inject
+    ConversationAgent conversationAgent;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -32,12 +36,13 @@ public class WebSocketEndpoint
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        LOGGER.info("on message "+message);
+        LOGGER.info("Message from chat "+message);
         managedExecutor.execute(() -> {
-            String response = message;
+
             try {
+                String response = conversationAgent.answer(message);
                 session.getBasicRemote().sendText(response);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });

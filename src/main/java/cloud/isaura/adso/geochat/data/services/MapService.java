@@ -52,7 +52,7 @@ public class MapService
             properties.setNome_zona(turnoutEntity.getProperties().getNome_zona());
             feature.setProperties(properties);
             features.add(feature);
-            LOGGER.info("feature "+feature);
+            LOGGER.debug("feature "+feature);
             MapResponseProperties mapResponseProperties = new MapResponseProperties(turnoutEntity.getProperties().getNome_zona(),turnoutEntity.getProperties().getCodice_zona(),affluenzaTotale);
             mapResponsePropertiesList.add(mapResponseProperties);
         }
