@@ -1,5 +1,5 @@
 package cloud.isaura.adso.geochat.conversation.ws;
-import cloud.isaura.adso.geochat.conversation.ConversationAgent;
+import cloud.isaura.adso.geochat.conversation.ConversationService;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
@@ -8,8 +8,6 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
-
-import java.io.IOException;
 
 
 @ServerEndpoint("/chatbot")
@@ -21,7 +19,7 @@ public class WebSocketEndpoint
     ManagedExecutor managedExecutor;
 
     @Inject
-    ConversationAgent conversationAgent;
+    ConversationService conversationService;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -40,7 +38,7 @@ public class WebSocketEndpoint
         managedExecutor.execute(() -> {
 
             try {
-                String response = conversationAgent.answer(message);
+                String response = conversationService.answer(message);
                 session.getBasicRemote().sendText(response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
