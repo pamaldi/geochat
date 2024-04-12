@@ -1,5 +1,6 @@
-package cloud.isaura.adso.geochat.conversation;
+package cloud.isaura.adso.geochat.conversation.agents;
 
+import cloud.isaura.adso.geochat.conversation.conf.ApiKeys;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -24,8 +25,11 @@ public class GeoAgent
         LOGGER.info("Startup performed ");
     }
 
-    GeoAgentResponse xxx()
+    public String response(String request)
     {
-        return null;
+        LOGGER.info("Request "+request);
+        String response = request;
+        LOGGER.info("Response "+response);
+        return request;
     }
 }

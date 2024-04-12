@@ -1,4 +1,4 @@
-package cloud.isaura.adso.geochat.conversation;
+package cloud.isaura.adso.geochat.conversation.conf;
 
 public class ApiKeys
 {

@@ -1,5 +1,5 @@
 package cloud.isaura.adso.geochat.conversation.ws;
-import cloud.isaura.adso.geochat.conversation.ConversationService;
+import cloud.isaura.adso.geochat.conversation.services.ConversationService;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;

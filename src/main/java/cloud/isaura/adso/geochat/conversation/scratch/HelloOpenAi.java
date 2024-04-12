@@ -1,6 +1,6 @@
 package cloud.isaura.adso.geochat.conversation.scratch;
 
-import cloud.isaura.adso.geochat.conversation.ApiKeys;
+import cloud.isaura.adso.geochat.conversation.conf.ApiKeys;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
