@@ -1,6 +1,9 @@
 package cloud.isaura.adso.geochat.conversation.agents;
 
 import cloud.isaura.adso.geochat.conversation.conf.ApiKeys;
+import cloud.isaura.adso.geochat.conversation.prompt.GeoPrompt;
+import cloud.isaura.adso.geochat.conversation.prompt.PromptParser;
+import cloud.isaura.adso.geochat.conversation.prompt.PromptUtils;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -13,6 +16,7 @@ import org.jboss.logging.Logger;
 public class GeoAgent
 {
     private ChatLanguageModel model;
+    private GeoPrompt geoPrompt;
 
     private static final Logger LOGGER = Logger.getLogger("GeoAgent");
 
@@ -22,14 +26,20 @@ public class GeoAgent
         openAiChatModelBuilder.modelName(OpenAiChatModelName.GPT_4);
         openAiChatModelBuilder.apiKey(ApiKeys.OPEN_AI_API_KEY);
         model = openAiChatModelBuilder.build();
+        PromptParser promptParser = new PromptParser();
+        geoPrompt = promptParser.build(PromptUtils.PROMPT);
         LOGGER.info("Startup performed ");
+        LOGGER.info(" geoPrompt "+geoPrompt);
     }
 
     public String response(String request)
     {
         LOGGER.info("Request "+request);
-        String response = request;
-        LOGGER.info("Response "+response);
-        return request;
+        this.geoPrompt.setUser(request);
+        String question = this.geoPrompt.toString();
+        LOGGER.info("Question "+question);
+        String answer = model.generate(question);
+        LOGGER.info("Response "+answer);
+        return answer;
     }
 }
